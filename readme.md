@@ -1,5 +1,6 @@
-# 1
-Firebase and Firestore using straight Cocoapods on High Sierra.
+# Firebase Firestore on High Sierra.
+
+## 1. Using straight Cocoapods
 
 Steps after a git pull:
 * bundle
@@ -24,7 +25,7 @@ Undefined symbols for architecture x86_64:
 etc etc
 
 
-# 2
+## 2. vendor_project trick
 Now, if we vendor_project BoringSSL by uncommenting this line in the Rakefile:
 ```
 app.vendor_project('resources/BoringSSL.framework', :static, :products => ['BoringSSL'], :headers_dir => 'Headers')  
@@ -37,3 +38,44 @@ dyld: Library not loaded: /usr/lib/libboringssl.dylib
   Reason: no suitable image found.  Did find:
   /usr/lib/libboringssl.dylib: mach-o, but not built for iOS simulator
 ```
+
+## 3. Static frameworks
+These aren't included in this project, but we can also use the static frameworks from Firebase themselves:
+https://firebase.google.com/docs/ios/setup#frameworks
+
+Throw them in /vendor, then update your Rakefile:
+```
+# General libs
+app.vendor_project('vendor/Firebase/Analytics/nanopb.framework', :static, :products => ['nanopb'], :headers_dir => 'Headers')  
+app.vendor_project('vendor/Firebase/Firestore/BoringSSL.framework', :static, :products => ['BoringSSL'], :headers_dir => 'Headers')  
+app.vendor_project('vendor/Firebase/Firestore/gRPC-Core.framework', :static, :products => ['gRPC-Core'], :headers_dir => 'Headers')  
+app.vendor_project('vendor/Firebase/Firestore/gRPC-RxLibrary.framework', :static, :products => ['gRPC-RxLibrary'], :headers_dir => 'Headers')  
+app.vendor_project('vendor/Firebase/Firestore/gRPC.framework', :static, :products => ['gRPC'], :headers_dir => 'Headers')  
+app.vendor_project('vendor/Firebase/Firestore/gRPC-ProtoRPC.framework', :static, :products => ['gRPC-ProtoRPC'], :headers_dir => 'Headers')  
+
+# Analytics
+app.vendor_project('vendor/Firebase/Analytics/FirebaseCore.framework', :static, :products => ['FirebaseCore'], :headers_dir => 'Headers')  
+app.vendor_project('vendor/Firebase/Analytics/FirebaseNanoPB.framework', :static, :products => ['FirebaseNanoPB'])  
+app.vendor_project('vendor/Firebase/Analytics/FirebaseCoreDiagnostics.framework', :static, :products => ['FirebaseCoreDiagnostics'])  
+app.vendor_project('vendor/Firebase/Analytics/FirebaseInstanceID.framework', :static, :products => ['FirebaseInstanceID'], :headers_dir => 'Headers')  
+app.vendor_project('vendor/Firebase/Analytics/GoogleToolboxForMac.framework', :static, :products => ['GoogleToolboxForMac'], :headers_dir => 'Headers')  
+app.vendor_project('vendor/Firebase/Analytics/FirebaseAnalytics.framework', :static, :products => ['FirebaseAnalytics'], :headers_dir => 'Headers')  
+
+# Auth
+app.vendor_project('vendor/Firebase/Auth/FirebaseAuth.framework', :static, :products => ['FirebaseAuth'], :headers_dir => 'Headers')  
+app.vendor_project('vendor/Firebase/Auth/GTMSessionFetcher.framework', :static, :products => ['GTMSessionFetcher'], :headers_dir => 'Headers')  
+
+# Database
+app.vendor_project('vendor/Firebase/Database/FirebaseDatabase.framework', :static, :products => ['FirebaseDatabase'], :headers_dir => 'Headers')  
+app.vendor_project('vendor/Firebase/Database/leveldb-library.framework', :static, :products => ['leveldb-library'], :headers_dir => 'Headers')  
+
+# Firestore
+app.vendor_project('vendor/Firebase/Firestore/leveldb-library.framework', :static, :products => ['leveldb-library'], :headers_dir => 'Headers')   
+app.vendor_project('vendor/Firebase/Firestore/Protobuf.framework', :static, :products => ['Protobuf'], :headers_dir => 'Headers')  
+app.vendor_project('vendor/Firebase/Firestore/FirebaseFirestore.framework', :static, :products => ['FirebaseFirestore'], :headers_dir => 'Headers')  
+```
+
+These are in a super specific order that I figured out through magic and alchemy. Now! This will compile but we get an error about the Invite section of Firebase (which you can see that we don't actually use). This same error was mentioned here:
+https://github.com/firebase/firebase-ios-sdk/issues/1110
+
+Their solution was to pull the pods direct from source, but that put me in the same boat as before. Using the static frameworks seem to get me closer so I commented in the above thread asking about that. They said that the statics will get updated in the next release (5.0). So maybe that'll work?
