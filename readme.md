@@ -1,9 +1,9 @@
 Firebase and Firestore using straight Cocoapods on High Sierra.
 
 Steps after a git pull:
-bundle
-rake pod:install
-rake
+* bundle
+* rake pod:install
+* rake
 
 Crashes during startup on 11.3 with:
 ```
