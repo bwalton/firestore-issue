@@ -26,6 +26,9 @@ Motion::Project::App.setup do |app|
   # version for your app
   app.version = '1.0'
 
+  app.deployment_target = "10.3"
+  app.sdk_version = "11.3"
+
   # ===========================================================================================
   # 3. Set your deployment target (it's recommended that you at least target 10.0 and above).
   #    If you're using RubyMotion Starter Edition. You cannot set this value (the latest
@@ -88,6 +91,8 @@ Motion::Project::App.setup do |app|
   # ===========================================================================================
   # app.entitlements['beta-reports-active'] = true
 
+
+  app.vendor_project('resources/BoringSSL.framework', :static, :products => ['BoringSSL'], :headers_dir => 'Headers')  
 
   firebase_version = "4.13.0"
   app.pods do
