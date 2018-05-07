@@ -92,7 +92,7 @@ Motion::Project::App.setup do |app|
   # app.entitlements['beta-reports-active'] = true
 
 
-  app.vendor_project('resources/BoringSSL.framework', :static, :products => ['BoringSSL'], :headers_dir => 'Headers')  
+  # app.vendor_project('resources/BoringSSL.framework', :static, :products => ['BoringSSL'], :headers_dir => 'Headers')  
 
   firebase_version = "4.13.0"
   app.pods do
