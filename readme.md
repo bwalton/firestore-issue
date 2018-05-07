@@ -75,7 +75,7 @@ app.vendor_project('vendor/Firebase/Firestore/Protobuf.framework', :static, :pro
 app.vendor_project('vendor/Firebase/Firestore/FirebaseFirestore.framework', :static, :products => ['FirebaseFirestore'], :headers_dir => 'Headers')  
 ```
 
-These are in a super specific order that I figured out through magic and alchemy. Now! This will compile but we get an error about the Invite section of Firebase (which you can see that we don't actually use). This same error was mentioned here:
+These are in a super specific order that I figured out through magic and alchemy. Now! On compile, we get an error about the Invite section of Firebase (which you can see that we don't actually use). This same error was mentioned here:
 https://github.com/firebase/firebase-ios-sdk/issues/1110
 
 Their solution was to pull the pods direct from source, but that put me in the same boat as before. Using the static frameworks seem to get me closer so I commented in the above thread asking about that. They said that the statics will get updated in the next release (5.0). So maybe that'll work?
